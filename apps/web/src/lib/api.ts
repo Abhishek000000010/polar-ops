@@ -1,8 +1,25 @@
 import { ApiResponse } from '@polar-ops/shared';
 
-const API_BASE = (typeof window !== 'undefined')
-  ? (process.env.NEXT_PUBLIC_API_URL || '/api/v1')
-  : (process.env.API_URL ? `${process.env.API_URL.replace(/\/+$/, '')}/api/v1` : 'https://polar-ops-api.onrender.com/api/v1');
+export function getApiBase(): string {
+  // If explicitly configured with non-localhost URL, use it
+  if (process.env.NEXT_PUBLIC_API_URL && !process.env.NEXT_PUBLIC_API_URL.includes('localhost')) {
+    return process.env.NEXT_PUBLIC_API_URL.replace(/\/+$/, '');
+  }
+  // When running in browser
+  if (typeof window !== 'undefined') {
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return 'http://localhost:4000/api/v1';
+    }
+    // Deployed cloud production URL
+    return 'https://polar-ops-api.onrender.com/api/v1';
+  }
+  // Server-side rendering
+  if (process.env.API_URL) {
+    const clean = process.env.API_URL.replace(/\/api\/v1\/?$/, '').replace(/\/+$/, '');
+    return `${clean}/api/v1`;
+  }
+  return 'https://polar-ops-api.onrender.com/api/v1';
+}
 
 let authToken: string | null = null;
 
@@ -33,7 +50,8 @@ export async function apiFetch<T>(endpoint: string, options: RequestInit = {}): 
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const url = endpoint.startsWith('http') ? endpoint : `${API_BASE}${endpoint}`;
+  const base = getApiBase();
+  const url = endpoint.startsWith('http') ? endpoint : `${base}${endpoint}`;
 
   try {
     const res = await fetch(url, {
