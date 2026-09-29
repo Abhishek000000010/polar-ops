@@ -23,6 +23,17 @@ export function createApp() {
   app.use(cors());
   app.use(express.json());
 
+  // Root welcome endpoint
+  app.get('/', (req, res) => {
+    res.json(successResponse({
+      name: 'Polar-Ops NCPOR Operational Platform API',
+      version: '1.0.0',
+      status: 'ONLINE',
+      health: '/health',
+      docs: '/api/v1'
+    }, { simulatedDate: nowISO() }));
+  });
+
   // Health check
   app.get('/health', (req, res) => {
     res.json(successResponse({ status: 'HEALTHY', system: 'Polar-Ops NCPOR Operational Platform' }, { simulatedDate: nowISO() }));
