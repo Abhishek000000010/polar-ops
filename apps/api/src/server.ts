@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { createApp } from './app';
 import { connectDB } from './core/db';
 import { resetAndSeedDatabase } from './modules/seed/service';
@@ -17,10 +18,11 @@ async function bootstrap() {
     }
 
     const app = createApp();
-    app.listen(PORT, () => {
+    const portNumber = Number(PORT);
+    app.listen(portNumber, '0.0.0.0', () => {
       console.log(`=======================================================`);
-      console.log(`❄️  POLAR-OPS OPERATIONAL API READY ON PORT ${PORT}`);
-      console.log(`📡 Base API endpoint: http://localhost:${PORT}/api/v1`);
+      console.log(`❄️  POLAR-OPS OPERATIONAL API READY ON PORT ${portNumber}`);
+      console.log(`📡 Base API endpoint: http://0.0.0.0:${portNumber}/api/v1`);
       console.log(`=======================================================`);
     });
   } catch (err) {

@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { connectDB, disconnectDB } from '../../core/db';
 import { resetAndSeedDatabase } from './service';
 
