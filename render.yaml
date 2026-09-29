@@ -36,14 +36,6 @@ services:
       - key: PORT
         value: 3000
       - key: API_URL
-        fromService:
-          type: web
-          name: polar-ops-api
-          property: host
-        transformation: "https://{value}"
+        value: https://polar-ops-api.onrender.com
       - key: NEXT_PUBLIC_API_URL
-        fromService:
-          type: web
-          name: polar-ops-api
-          property: host
-        transformation: "https://{value}/api/v1"
+        value: https://polar-ops-api.onrender.com/api/v1
