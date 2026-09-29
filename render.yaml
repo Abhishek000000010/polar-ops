@@ -35,6 +35,12 @@ services:
         value: production
       - key: PORT
         value: 3000
+      - key: API_URL
+        fromService:
+          type: web
+          name: polar-ops-api
+          property: host
+        transformation: "https://{value}"
       - key: NEXT_PUBLIC_API_URL
         fromService:
           type: web

@@ -1,6 +1,8 @@
 import { ApiResponse } from '@polar-ops/shared';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || (typeof window !== 'undefined' ? '/api/v1' : 'http://localhost:4000/api/v1');
+const API_BASE = (typeof window !== 'undefined')
+  ? (process.env.NEXT_PUBLIC_API_URL || '/api/v1')
+  : (process.env.API_URL ? `${process.env.API_URL.replace(/\/+$/, '')}/api/v1` : 'https://polar-ops-api.onrender.com/api/v1');
 
 let authToken: string | null = null;
 
