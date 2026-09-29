@@ -1,0 +1,43 @@
+services:
+  # ---------------------------------------------------------------------------
+  # Polar-Ops Backend API (Express + TypeScript + Mongoose)
+  # ---------------------------------------------------------------------------
+  - type: web
+    name: polar-ops-api
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm install && npm run build:api
+    startCommand: npm run start:api
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 4000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGODB_URI
+        sync: false # Set your MongoDB Atlas URI here, or leave blank to use the built-in embedded database
+
+  # ---------------------------------------------------------------------------
+  # Polar-Ops Frontend Console (Next.js 14 App Router + TailwindCSS)
+  # ---------------------------------------------------------------------------
+  - type: web
+    name: polar-ops-web
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm install && npm run build:web
+    startCommand: npm run start:web
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: polar-ops-api
+          property: host
+        transformation: "https://{value}/api/v1"
